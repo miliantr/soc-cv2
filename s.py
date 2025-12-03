@@ -1,7 +1,8 @@
 import socket
 import struct
-import cv2
-import numpy as np
+
+from detection import detection
+from tracking import tracking
 
 HOST = "127.0.0.1"
 PORT = 8888
@@ -24,11 +25,10 @@ while True:
     filename = f"img/frame_{frame_count:04d}.jpg"
     with open(filename, "wb") as f:
         f.write(payload)
-    
-    img = cv2.imread(filename, cv2.IMREAD_GRAYSCALE)
 
-    M = np.mean(img)
-    if M < 174.0:
-        print("detected")
+    detection(filename)
+    tracking(filename)
 
     frame_count += 1
+
+
