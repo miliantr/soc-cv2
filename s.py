@@ -1,48 +1,34 @@
 import socket
-import numpy as np
+import struct
 import cv2
+import numpy as np
 
 HOST = "127.0.0.1"
 PORT = 8888
 
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 server.bind((HOST, PORT))
-server.listen()
+print("UDP server listening on {}:{}".format(HOST, PORT))
 
-client_socket, client_address = server.accept()
+frame_count = 0
 
-#file = open("acc_img.jpg", "wb")
-#image_chunk = client_socket.recv(1024)
-#while image_chunk:
-#    file.write(image_chunk)
+while True:
+    data, addr = server.recvfrom(65507)
+    if len(data) < 4:
+        print("Packet too small, skipping")
+        continue
 
-while server.connect:
-    image_chunk = client_socket.recv(1024)
+    size = struct.unpack("<I", data[:4])[0]
+    payload = data[4:]
 
-M = np.mean(image_chunk)
+    filename = f"img/frame_{frame_count:04d}.jpg"
+    with open(filename, "wb") as f:
+        f.write(payload)
+    
+    img = cv2.imread(filename, cv2.IMREAD_GRAYSCALE)
 
-if (M < 174.7):
-    print("detected")
-else:
-    print("undetected")
+    M = np.mean(img)
+    if M < 174.0:
+        print("detected")
 
-#server.sendall()
-#file.close()
-
-client_socket.close()
-
-"""
-src = 'image0012.png'
-src1 = 'image0000.png'
-img = cv2.imread(src, cv2.IMREAD_GRAYSCALE)
-img1 = cv2.imread(src1, cv2.IMREAD_GRAYSCALE)
-img_buffer = img
-
-M = np.mean(img)
-M1 = np.mean(img1)
-
-if (M < 174.7):
-    print("detected")
-else:
-    print("undetected")
-"""
+    frame_count += 1
