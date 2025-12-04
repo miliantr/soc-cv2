@@ -32,4 +32,4 @@ def tracking(_img1, _img2):
     return r
 
 
-print(tracking("img/frame_0011.jpg", "img/frame_0012.jpg"))
+#print(tracking("img/frame_0011.jpg", "img/frame_0012.jpg"))

@@ -12,14 +12,13 @@ f = open("tmp.txt", "wb")
 while file:
     f.write(file)
 
-
 img_data = file.read(2048)
 
 client.send(img_data)
 
-#while img_data:
-    #client.send(img_data)
-    #img_data = file.read(1024)
+while img_data:
+    client.send(img_data)
+    img_data = file.read(1024)
 
 file.close()
 client.close()
