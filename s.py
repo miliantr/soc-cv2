@@ -26,7 +26,7 @@ while True:
     with open(filename, "wb") as f:
         f.write(payload)
 
-    detection(filename)
+    #detection(filename)
     #tracking(filename)
 
     frame_count += 1
