@@ -1,10 +1,11 @@
 import os
 
-path = "img"
+def imgDstr():
+    path = "img"
 
-for filename in os.listdir(path):
-    file_path = os.path.join(path, filename)
-    os.remove(file_path)
+    for filename in os.listdir(path):
+        file_path = os.path.join(path, filename)
+        os.remove(file_path)
 
-f = open("img/.gitkeep", "w")
-f.close()
+    f = open("img/.gitkeep", "w")
+    f.close()

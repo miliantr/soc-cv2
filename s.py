@@ -1,8 +1,12 @@
 import socket
 import struct
+import cv2
 
+from imgDstr import imgDstr
 from detection import detection
-from tracking import tracking
+#from tracking import tracking
+
+imgDstr()
 
 HOST = "127.0.0.1"
 PORT = 8888
@@ -26,7 +30,12 @@ while True:
     with open(filename, "wb") as f:
         f.write(payload)
 
-    #detection(filename)
+    img, cnt, M = detection(filename)
+
+    x, y, w, h = cv2.boundingRect(cnt)
+    reply = (x.to_bytes(4, "little") + y.to_bytes(4, "little") +
+              w.to_bytes(4, "little") + h.to_bytes(4, "little"))
+    server.sendto(reply, addr)
     #tracking(filename)
 
     frame_count += 1
