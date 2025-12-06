@@ -1,20 +1,18 @@
 import cv2
-import matplotlib.pyplot as plt
 import numpy as np
 import scipy.ndimage
-from skimage.filters import try_all_threshold, threshold_otsu
-import sklearn.metrics
+from skimage.filters import threshold_otsu
 
-def detection(filename):
-    img = cv2.imread(filename, cv2.IMREAD_GRAYSCALE) 
-    #img = cv2.imdecode(np.frombuffer(payload, np.uint8), cv2.IMREAD_GRAYSCALE)
+def detection(payload):
+    #img = cv2.imread(payload, cv2.IMREAD_GRAYSCALE)
+    img = cv2.imdecode(np.frombuffer(payload, np.uint8), cv2.IMREAD_GRAYSCALE)
     median_filtered = scipy.ndimage.median_filter(img, size=3)
     threshold = threshold_otsu(median_filtered)
     predicted = np.uint8(median_filtered > threshold) * 255
     _, thresh = cv2.threshold(img, threshold + 10, 255, cv2.THRESH_BINARY_INV)
     contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     cnt = max(contours, key=cv2.contourArea)
-
+    
     #x, y, w, h = cv2.boundingRect(cnt)
     #print("Bounding box:")
     #print("x_min =", x, "y_min =", y)
@@ -29,5 +27,5 @@ def detection(filename):
     #cv2.imshow("result", img)
     return predicted, cnt, M
 
-#detection("img/frame_0045.jpg")
+#detection("img/frame_0055.jpg")
 #cv2.waitKey(0)

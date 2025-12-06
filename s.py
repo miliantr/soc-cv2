@@ -4,9 +4,6 @@ import cv2
 
 from imgDstr import imgDstr
 from detection import detection
-#from tracking import tracking
-
-imgDstr()
 
 HOST = "127.0.0.1"
 PORT = 8888
@@ -26,11 +23,11 @@ while True:
     size = struct.unpack("<I", data[:4])[0]
     payload = data[4:]
 
-    filename = f"img/frame_{frame_count:04d}.jpg"
-    with open(filename, "wb") as f:
-        f.write(payload)
+    #filename = f"img/frame_{frame_count:04d}.jpg"
+    #with open(filename, "wb") as f:
+    #    f.write(payload)
 
-    img, cnt, M = detection(filename)
+    img, cnt, M = detection(payload)
 
     x, y, w, h = cv2.boundingRect(cnt)
     reply = (x.to_bytes(4, "little") + y.to_bytes(4, "little") +
